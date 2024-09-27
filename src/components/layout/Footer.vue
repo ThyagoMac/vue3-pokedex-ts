@@ -1,4 +1,4 @@
-<script setup></script>
+<script setup lang="ts"></script>
 <template>
   <footer class="bg-zinc-200">
     <div class="max-w-screen-lg m-auto p-5">
