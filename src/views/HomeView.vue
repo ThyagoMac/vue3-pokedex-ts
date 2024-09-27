@@ -3,5 +3,5 @@ import BaseTemplate from '@/components/layout/BaseTemplate.vue'
 </script>
 
 <template>
-  <BaseTemplate> um test </BaseTemplate>
+  <BaseTemplate> um test 2</BaseTemplate>
 </template>

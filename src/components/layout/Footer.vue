@@ -1,8 +1,8 @@
 <script setup></script>
 <template>
-  <footer class="bg-blue-100">
-    <div class="max-w-screen-lg m-auto bg-blue-400">
-      <p>&copy; 2022 Sample Website. All rights reserved.</p>
+  <footer class="bg-zinc-200">
+    <div class="max-w-screen-lg m-auto p-5">
+      <p class="text-center">&copy; Created by Thyago Mac. All rights reserved.</p>
     </div>
   </footer>
 </template>
