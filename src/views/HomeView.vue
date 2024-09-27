@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import BaseTemplate from '@/components/layout/BaseTemplate.vue'
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <BaseTemplate> um test </BaseTemplate>
 </template>
