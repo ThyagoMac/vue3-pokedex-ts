@@ -24,7 +24,12 @@ export const usePokemonStore = defineStore('pokemonStore', () => {
     try {
       const { status, data } = await getPokemons(filters)
       if (status === 200) {
-        initPokemons(data.results)
+        const finalPokemons: PokemonType[] = data.results.map((pokemon, index) => ({
+          ...pokemon,
+          id: index + 1
+        }))
+        console.log('pipi: ', finalPokemons)
+        initPokemons(finalPokemons)
         return {
           success: true,
           results: null
