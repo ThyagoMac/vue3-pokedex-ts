@@ -10,7 +10,6 @@ onMounted(async () => {
     offset: 0
   })
 
-  console.log('content: ', pokemonStore.pokemons)
   if (!success) {
     alert('Something gone wrong!')
     console.log('Error STATUS: ', status)

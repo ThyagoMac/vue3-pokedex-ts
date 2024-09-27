@@ -4,12 +4,12 @@ import type { PokemonType } from '@/types/PokemonType'
 import type { AxiosError } from 'axios'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useLoadingStore } from '../is-loading'
 
 export const usePokemonStore = defineStore('pokemonStore', () => {
   const pokemons = ref<PokemonType[]>([])
 
   function initPokemons(data: PokemonType[]) {
-    console.log('data1: ', data)
     pokemons.value = data
   }
 
@@ -18,14 +18,15 @@ export const usePokemonStore = defineStore('pokemonStore', () => {
   }
 
   /* dispatch */
+  const loading = useLoadingStore()
   async function dispatchGetPokemons(filters?: {
     limit: number
     offset: number
   }): Promise<APIResponse<null>> {
+    loading.loading()
     try {
       const { status, data } = await getPokemons(filters)
       if (status === 200) {
-        console.log('data2: ', data)
         initPokemons(data.results)
         return {
           success: true,
@@ -39,7 +40,10 @@ export const usePokemonStore = defineStore('pokemonStore', () => {
         status: _error.response?.status,
         results: null
       }
+    } finally {
+      loading.loaded()
     }
+
     return {
       success: false,
       results: null,
