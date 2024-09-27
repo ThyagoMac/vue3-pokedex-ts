@@ -28,7 +28,6 @@ export const usePokemonStore = defineStore('pokemonStore', () => {
           ...pokemon,
           id: index + 1
         }))
-        console.log('pipi: ', finalPokemons)
         initPokemons(finalPokemons)
         return {
           success: true,
