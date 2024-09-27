@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { useRouter } from 'vue-router'
 
-const navigation = [
-  { name: 'Home', href: '/', current: true },
-  { name: 'About', href: 'about', current: false }
-]
+const routes = useRouter()
+const navigations = routes.getRoutes().map(({ path, name }) => ({ path, name }))
 </script>
 <template>
   <header class="bg-zinc-200">
@@ -19,15 +18,14 @@ const navigation = [
             <div class="hidden sm:ml-6 sm:block">
               <div class="flex space-x-4">
                 <RouterLink
-                  v-for="(item, index) in navigation"
-                  :to="item.href"
+                  v-for="(navigation, index) in navigations"
+                  :to="navigation.path"
                   :key="index"
                   class="py-2 px-3 w-min rounded-md bg-red-200"
                   activeClass="bg-green-300"
                   exactActiveClass="bg-green-200"
-                  :aria-current="item.current ? 'page' : undefined"
                 >
-                  {{ item.name }}
+                  {{ navigation.name }}
                 </RouterLink>
               </div>
             </div>
@@ -49,14 +47,14 @@ const navigation = [
       <DisclosurePanel class="sm:hidden">
         <div class="space-y-1 px-2 pb-3 pt-2">
           <RouterLink
-            v-for="(item, index) in navigation"
+            v-for="(navigation, index) in navigations"
             :key="index"
-            :to="item.href"
+            :to="navigation.path"
             class="py-2 px-3 rounded-md bg-red-200 block"
             activeClass="bg-green-300"
             exactActiveClass="bg-green-200"
-            :aria-current="item.current ? 'page' : undefined"
-            >{{ item.name }}
+          >
+            {{ navigation.name }}
           </RouterLink>
         </div>
       </DisclosurePanel>
