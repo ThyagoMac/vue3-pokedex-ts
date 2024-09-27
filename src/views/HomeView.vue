@@ -2,6 +2,9 @@
 import BaseTemplate from '@/components/layout/BaseTemplate.vue'
 import DescriptionCard from '@/components/cards/DescriptionCard.vue'
 import PokemonListCards from '@/components/cards/PokemonListCards.vue'
+import { onMounted } from 'vue'
+
+onMounted(() => {})
 </script>
 
 <template>
