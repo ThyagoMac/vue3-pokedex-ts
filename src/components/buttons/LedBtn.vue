@@ -14,10 +14,10 @@ const { size, color, flicker } = withDefaults(defineProps<Props>(), {
 <template>
   <div
     :class="`
-      bg-${color}-400
+      bg-${color || 'cyan'}-400
       rounded-full
-      w-${size}
-      h-${size}
+      w-${size || '12'}
+      h-${size || '12'}
       border-4
     border-zinc-200
       ${flicker ? 'led-flicker' : ''}

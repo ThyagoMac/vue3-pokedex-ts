@@ -6,3 +6,8 @@ export type PokemonType = {
 }
 
 export type PokemonListType = PokemonType[]
+
+export type PokemonFilterType = {
+  limit: number
+  offset: number
+}

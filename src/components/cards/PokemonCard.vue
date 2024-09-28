@@ -36,8 +36,8 @@ const activeClasses = computed(() => {
       width="112"
       :alt="`${pokemon.name}-pic`"
     />
-    <p>#{{ position }}</p>
-    <p>{{ pokemon.name }}</p>
+    <p class="text-xs mt-1">#{{ position }}</p>
+    <p class="capitalize">{{ pokemon.name }}</p>
   </div>
   <!--  -->
 </template>

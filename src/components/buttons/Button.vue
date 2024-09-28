@@ -1,15 +1,45 @@
 <script setup lang="ts">
-const props = defineProps<{
+const { variant, size, disabled } = defineProps<{
   variant?: string
   size?: string
+  disabled?: boolean
 }>()
 
-const variantClass =
-  props.variant === 'secondary' ? 'bg-green-200 hover:bg-green-400' : 'bg-red-200 hover:bg-red-400'
+const loadVariantClass = () => {
+  if (variant && variant === 'secondary') {
+    return 'rounded-md bg-green-200 hover:bg-green-400'
+  }
+  if (variant && variant === 'dark-btn') {
+    return 'rounded-md bg-zinc-700 text-zinc-400 border-4 border-zinc-900 hover:bg-zinc-900 hover:text-zinc-100'
+  }
+  return 'bg-red-200 hover:bg-red-400'
+}
+
+const loadSizeClass = () => {
+  if (size && size === 'sm') {
+    return 'py-1 px-2 text-sm'
+  }
+
+  if (size && size === 'lg') {
+    return 'py-3 px-4 text-lg'
+  }
+
+  return 'py-2 px-3 '
+}
+
+const variantClass = loadVariantClass()
+const sizeClass = loadSizeClass()
 </script>
 
 <template>
-  <button :class="['py-2 px-3 w-min rounded-md', variantClass]">
+  <button
+    :disabled="disabled"
+    :class="[
+      'min-w-fit transition-all disabled:opacity-80 disabled:cursor-not-allowed',
+      variantClass,
+      sizeClass
+    ]"
+  >
     <slot />
   </button>
 </template>
