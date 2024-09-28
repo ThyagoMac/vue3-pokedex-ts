@@ -3,7 +3,7 @@ import { usePokemonStore } from '@/stores/pokemons'
 import { computed, onMounted, ref } from 'vue'
 import PokemonCard from './PokemonCard.vue'
 import type { PokemonType } from '@/types/PokemonType'
-import Button from '@/components/buttons/Button.vue'
+import ListCardsPagination from '../paginations/ListCardsPagination.vue'
 
 const pokemonStore = usePokemonStore()
 const isLoading = ref(true)
@@ -75,7 +75,7 @@ const handlePokemonCardClick = (pokemon: PokemonType) => {
 <template>
   <div class="bg-red-600 p-5 h-full flex flex-col gap-5">
     <div v-show="!isLoading" class="bg-zinc-300 py-4 px-2 rounded-md">
-      <h3 class="font-bold text-xl mb-6">Pokemon List ({{ pokemonStore.pokemons.length }})</h3>
+      <h2 class="font-bold text-xl mb-3">Pokemon List ({{ pokemonStore.pokemons.length }})</h2>
       <div class="pokemon-list-screen">
         <div class="grid grid-cols-2 gap-0 bar">
           <PokemonCard
@@ -88,19 +88,12 @@ const handlePokemonCardClick = (pokemon: PokemonType) => {
       </div>
     </div>
     <div v-show="isLoading">loading</div>
-    <div class="flex gap-2">
-      <Button
-        :disabled="disableMoreBtn"
-        class="flex-1"
-        variant="dark-btn"
-        @click="handleShowMoreTwenty"
-      >
-        Show {{ nextPage }}
-      </Button>
-      <Button :disabled="disableMoreBtn" class="flex-1" variant="dark-btn" @click="handleShowAll">
-        Show All
-      </Button>
-    </div>
+
+    <ListCardsPagination
+      :nextPage="nextPage"
+      @handleShowAll="handleShowAll"
+      @handleShowMoreTwenty="handleShowMoreTwenty"
+    />
   </div>
 </template>
 
