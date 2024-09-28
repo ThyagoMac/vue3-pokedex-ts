@@ -11,7 +11,10 @@ const pokemonStore = usePokemonStore()
         <div class="bg-red-500 h-3 w-3 rounded-full border-2 border-black"></div>
         <div class="left-1/2 bg-red-500 h-3 w-3 rounded-full border-2 border-black"></div>
       </div>
-      <div v-if="pokemonStore.currentPokemon" class="p-3 bg-blue-100 rounded-md">
+      <div
+        v-if="pokemonStore.currentPokemon"
+        class="p-3 bg-blue-100 rounded-md h-72 bg-opacity-40 backdrop-blur-lg drop-shadow-lg m-auto w-full"
+      >
         <img
           class="m-auto h-72 w-72"
           height="288"

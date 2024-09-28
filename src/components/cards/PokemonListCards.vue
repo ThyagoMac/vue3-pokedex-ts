@@ -7,6 +7,7 @@ import ListCardsPagination from '@/components/paginations/ListCardsPagination.vu
 import TextInput from '@/components/inputs/TextInput.vue'
 import Button from '../buttons/Button.vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
+import { POKEMONSPECIES } from '@/mock/PokemonSpecies'
 
 const pokemonStore = usePokemonStore()
 const pokemonList = ref<PokemonType[] | null>([])
@@ -124,16 +125,28 @@ const handleSearchPokemons = async (e: Event) => {
           placeholder="Search a pokemon"
           v-model="searchInput"
         />
-        <Button type="submit">
-          <MagnifyingGlassIcon class="block h-6 w-6" />
+        <Button variant="dark-btn" size="sm" type="submit">
+          <MagnifyingGlassIcon class="block h-5 w-5" />
         </Button>
       </div>
     </form>
     <ListCardsPagination
       :nextPage="nextPage"
+      :disableMoreBtn="disableMoreBtn"
       @handleShowMoreTwenty="handleShowMoreTwenty"
       @handleShowAll="handleShowAll"
     />
+    <section class="flex flex-wrap items-center justify-center max-w-80">
+      <div
+        v-for="pokemonSpecie in POKEMONSPECIES"
+        :key="pokemonSpecie.name"
+        class="flex-1 border-4 cursor-pointer opacity-90 font-bold hover:opacity-100 hover:border-zinc-900 hover:border-solid transition-all"
+      >
+        <p :class="`${pokemonSpecie.color} capitalize text-center p-2`">
+          {{ pokemonSpecie.name }}
+        </p>
+      </div>
+    </section>
   </div>
 </template>
 

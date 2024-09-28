@@ -5,9 +5,13 @@ export type PokemonType = {
   url: string
 }
 
-export type PokemonListType = PokemonType[]
-
 export type PokemonFilterType = {
   limit: number
   offset: number
+}
+
+export type PokemnonSpecieType = {
+  name: string
+  color: string
+  icon?: string
 }

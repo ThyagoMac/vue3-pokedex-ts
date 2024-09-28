@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { variant, size, disabled } = defineProps<{
-  variant?: string
-  size?: string
+  variant?: 'secondary' | 'dark-btn'
+  size?: 'sm' | 'lg'
   disabled?: boolean
 }>()
 
