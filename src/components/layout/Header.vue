@@ -21,7 +21,7 @@ const navigations = routes.getRoutes().map(({ path, name }) => ({ path, name }))
                   v-for="(navigation, index) in navigations"
                   :to="navigation.path"
                   :key="index"
-                  class="py-2 px-3 w-min rounded-md bg-red-200"
+                  class="py-2 px-3 w-min rounded-md bg-green-200 hover:bg-green-300 transition-all"
                   activeClass="bg-green-300"
                   exactActiveClass="bg-green-200"
                 >
