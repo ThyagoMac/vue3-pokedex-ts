@@ -7,6 +7,7 @@ import { ref } from 'vue'
 
 export const usePokemonStore = defineStore('pokemonStore', () => {
   const pokemons = ref<PokemonType[]>([])
+  const currentPokemon = ref<PokemonType | null>(null)
 
   function initPokemons(data: PokemonType[]) {
     pokemons.value = data
@@ -14,6 +15,10 @@ export const usePokemonStore = defineStore('pokemonStore', () => {
 
   function removePokemon(id: string) {
     pokemons.value = pokemons.value.filter((pokemon) => pokemon.id !== id)
+  }
+
+  function updateCurrentPokemon(pokemon: PokemonType) {
+    currentPokemon.value = pokemon
   }
 
   /* dispatch */
@@ -24,10 +29,14 @@ export const usePokemonStore = defineStore('pokemonStore', () => {
     try {
       const { status, data } = await getPokemons(filters)
       if (status === 200) {
-        const finalPokemons: PokemonType[] = data.results.map((pokemon, index) => ({
-          ...pokemon,
-          id: index + 1
-        }))
+        const finalPokemons: PokemonType[] = data.results.map((pokemon, index) => {
+          const id = pokemon.url.split('/')[6] || index + 1
+
+          return {
+            ...pokemon,
+            id: id
+          }
+        })
         initPokemons(finalPokemons)
         return {
           success: true,
@@ -53,8 +62,10 @@ export const usePokemonStore = defineStore('pokemonStore', () => {
 
   return {
     pokemons,
+    currentPokemon,
     initPokemons,
     removePokemon,
+    updateCurrentPokemon,
     dispatchGetPokemons
   }
 })

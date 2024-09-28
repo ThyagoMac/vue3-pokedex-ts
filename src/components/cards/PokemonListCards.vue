@@ -2,13 +2,14 @@
 import { usePokemonStore } from '@/stores/pokemons'
 import { onMounted, ref } from 'vue'
 import PokemonCard from './PokemonCard.vue'
+import type { PokemonType } from '@/types/PokemonType'
 
 const pokemonStore = usePokemonStore()
 const isLoading = ref(true)
 
 onMounted(async () => {
   const { success, status } = await pokemonStore.dispatchGetPokemons({
-    limit: 5,
+    limit: 6,
     offset: 0
   })
 
@@ -20,21 +21,22 @@ onMounted(async () => {
   }
 })
 
-const handlePokemonCardClick = () => {
-  console.log('update-pokemon: ')
+const handlePokemonCardClick = (pokemon: PokemonType) => {
+  console.log('update-pokemon: ', pokemon)
+  pokemonStore.updateCurrentPokemon(pokemon)
+  console.log('pipi: ', pokemonStore.currentPokemon)
 }
 </script>
 <template>
-  <div class="border border-zinc-200 rounded-md bg-blue-50 p-5">
-    <div v-show="!isLoading">
-      <h3>Pokemon List</h3>
-      <div class="grid grid-cols-2">
+  <div class="bg-red-600 p-5 h-full">
+    <div v-show="!isLoading" class="bg-zinc-300 py-4 px-2 rounded-md">
+      <h3 class="font-bold text-xl mb-6">Pokemon List</h3>
+      <div class="grid grid-cols-2 gap-0">
         <PokemonCard
           v-for="pokemon in pokemonStore.pokemons"
           :key="pokemon.name"
           :pokemon="pokemon"
-          class="cursor-pointer"
-          @click="handlePokemonCardClick"
+          @click="() => handlePokemonCardClick(pokemon)"
         />
       </div>
     </div>
