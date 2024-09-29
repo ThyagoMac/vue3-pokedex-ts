@@ -11,7 +11,7 @@ const { disableMoreBtn, nextPage } = defineProps<{
     <Button
       :disabled="disableMoreBtn"
       class="flex-1"
-      variant="dark-btn"
+      variant="dark"
       @click="$emit('handleShowMoreTwenty')"
     >
       Show {{ nextPage }}
@@ -19,7 +19,7 @@ const { disableMoreBtn, nextPage } = defineProps<{
     <Button
       :disabled="disableMoreBtn"
       class="flex-1"
-      variant="dark-btn"
+      variant="dark"
       @click="$emit('handleShowAll')"
     >
       Show All

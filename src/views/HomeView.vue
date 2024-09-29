@@ -12,7 +12,7 @@ onMounted(() => {})
   <BaseTemplate>
     <div class="flex flex-col gap-5 md:flex-row bg-red-700 py-5 px-3 rounded-lg">
       <section class="bg-red-600 flex-1">
-        <LedBtn class="ml-9 mt-4" size="12" color="cyan" :flicker="true" />
+        <LedBtn class="ml-9 mt-4" size="md" color="cyan" :flicker="true" />
         <DescriptionCard />
       </section>
       <section class="bg-green-100">

@@ -125,7 +125,7 @@ const handleSearchPokemons = async (e: Event) => {
           placeholder="Search a pokemon"
           v-model="searchInput"
         />
-        <Button variant="dark-btn" size="sm" type="submit">
+        <Button variant="dark" size="sm" type="submit">
           <MagnifyingGlassIcon class="block h-5 w-5" />
         </Button>
       </div>

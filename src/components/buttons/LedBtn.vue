@@ -1,27 +1,33 @@
 <script setup lang="ts">
 type Props = {
-  color?: string
-  size?: string
+  color?: 'cyan'
+  size?: 'sm' | 'md' | 'lg'
   flicker?: boolean
 }
 
 const { size, color, flicker } = withDefaults(defineProps<Props>(), {
   color: 'cyan',
   flicker: false,
-  size: '12'
+  size: 'md'
 })
+
+const classConfig = {
+  //color
+  cyan: 'bg-cyan-400',
+
+  //size
+  sm: 'w-6 h-6',
+  md: 'w-12 h-12',
+  lg: 'w-15 h-15'
+}
 </script>
 <template>
   <div
-    :class="`
-      bg-${color || 'cyan'}-400
-      rounded-full
-      w-${size || '12'}
-      h-${size || '12'}
-      border-4
-    border-zinc-200
-      ${flicker ? 'led-flicker' : ''}
-    `"
+    :class="[
+      `rounded-full border-4 border-zinc-200 ${flicker ? 'led-flicker' : ''}`,
+      classConfig[color],
+      classConfig[size]
+    ]"
   ></div>
 </template>
 
