@@ -7,7 +7,7 @@ import ListCardsPagination from '@/components/paginations/ListCardsPagination.vu
 import TextInput from '@/components/inputs/TextInput.vue'
 import Button from '../buttons/Button.vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
-import { POKEMONSPECIES } from '@/mock/PokemonSpecies'
+import { POKEMONSPECIES } from '@/utils/constants'
 
 const pokemonStore = usePokemonStore()
 const pokemonList = ref<PokemonType[] | null>([])
@@ -26,7 +26,7 @@ const nextPage = computed(() => {
 })
 
 onMounted(async () => {
-  const { success, status } = await pokemonStore.dispatchGetPokemons()
+  const { success, status } = await pokemonStore.dispatchGetPokemonsList()
 
   pokemonList.value = [...pokemonStore.pokemons]
 
@@ -45,7 +45,7 @@ const handleShowMoreTwenty = async () => {
     disableMoreBtn.value = true
   }
 
-  const { success, status } = await pokemonStore.dispatchGetPokemons({
+  const { success, status } = await pokemonStore.dispatchGetPokemonsList({
     limit: finalLimit.value,
     offset: 0
   })
@@ -65,7 +65,7 @@ const handleShowAll = async () => {
   limit.value = 151
   disableMoreBtn.value = true
 
-  const { success, status } = await pokemonStore.dispatchGetPokemons({
+  const { success, status } = await pokemonStore.dispatchGetPokemonsList({
     limit: limit.value,
     offset: 0
   })
@@ -80,7 +80,7 @@ const handleShowAll = async () => {
 }
 
 const handlePokemonCardClick = (pokemon: PokemonType) => {
-  pokemonStore.updateCurrentPokemon(pokemon)
+  pokemonStore.dispatchSetCurrentPokemon(pokemon.id)
 }
 
 const handleSearchPokemons = async (e: Event) => {

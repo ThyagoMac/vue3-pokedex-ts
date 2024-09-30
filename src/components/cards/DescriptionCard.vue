@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { usePokemonStore } from '@/stores/pokemons'
+import type { CurrentPokemonType } from '@/types/PokemonType'
 
 const pokeImgBaseUrl = import.meta.env.VITE_POKEMON_IMG_API_URL
-const pokemonStore = usePokemonStore()
+const { currentPokemon } = defineProps<{
+  currentPokemon: CurrentPokemonType | null
+}>()
 </script>
 <template>
   <div class="m-5 flex flex-col gap-3">
@@ -12,14 +14,14 @@ const pokemonStore = usePokemonStore()
         <div class="left-1/2 bg-red-500 h-3 w-3 rounded-full border-2 border-black"></div>
       </div>
       <div
-        v-if="pokemonStore.currentPokemon"
-        class="p-3 bg-blue-100 rounded-md h-72 bg-opacity-40 backdrop-blur-lg drop-shadow-lg m-auto w-full"
+        v-if="currentPokemon"
+        class="p-3 bg-blue-100 rounded-md bg-opacity-40 backdrop-blur-lg drop-shadow-lg m-auto w-full"
       >
         <img
           class="m-auto h-72 w-72"
           height="288"
           width="288"
-          :src="`${pokeImgBaseUrl}${pokemonStore.currentPokemon?.id}.svg`"
+          :src="`${pokeImgBaseUrl}${currentPokemon?.id}.svg`"
           alt="current-pokemon-picture"
         />
       </div>
@@ -33,7 +35,29 @@ const pokemonStore = usePokemonStore()
         />
       </div>
     </div>
-    <div class="p-3 bg-green-200 rounded-md">Statistics / type 💧 🪨 🌿 🔥</div>
+    <div class="p-3 bg-green-200 rounded-md">
+      <div class="grid grid-cols-2">
+        <div>
+          <div class="font-bold text-sm mb-2">Stats</div>
+          <div v-for="(stat, index) in currentPokemon?.stats" :key="index">
+            <span class="text-bold uppercase">
+              {{ stat.stat.name }}
+            </span>
+            : {{ stat.base_stat }}
+          </div>
+        </div>
+        <div>
+          <div class="font-bold text-sm mb-2">Types</div>
+          <div v-for="(pkmType, index) in currentPokemon?.types" :key="index">
+            <span
+              :class="`${pkmType.color} text-center py-1 px-2 uppercase text-xs font-bold rounded-md`"
+              >{{ pkmType.name }}</span
+            >
+          </div>
+        </div>
+      </div>
+      Statistics / type 💧 🪨 🌿 🔥
+    </div>
     <div class="p-3 bg-green-200 rounded-md">Evolutions</div>
   </div>
 </template>
