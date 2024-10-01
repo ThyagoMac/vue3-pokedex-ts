@@ -48,13 +48,20 @@ export const usePokemonStore = defineStore('pokemonStore', () => {
       }
       const { status, data } = await getPokemons(currentFilters.value)
       if (status === 200) {
+        const pokeImgBaseUrl = import.meta.env.VITE_POKEMON_IMG_API_URL
         const finalPokemons: PokemonType[] = data.results.map((pokemon, index) => {
           //get id in "url": "https://pokeapi.co/api/v2/pokemon/1/"
+          //method one:
+          //const id = pokemon.url.split('/')[6] || index + 1
+          //method two:
+          //const pokeImgBaseUrl = import.meta.env.VITE_POKEMON_API_URL
+          //const id = pokemon.url.replace(`${pokeImgBaseUrl}pokemon/`, '').replace('/', '')
           const id = pokemon.url.split('/')[6] || index + 1
 
           return {
             ...pokemon,
-            id: id
+            id: id,
+            img: `${pokeImgBaseUrl}${id}.svg`
           }
         })
         initPokemons(finalPokemons)

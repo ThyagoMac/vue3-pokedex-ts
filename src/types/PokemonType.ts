@@ -3,6 +3,7 @@ export type PokemonType = {
   name: string
   description: string
   url: string
+  img: string
 }
 
 export type PokemonFilterType = {

@@ -3,7 +3,6 @@ import type { PokemonType } from '@/types/PokemonType'
 import { usePokemonStore } from '@/stores/pokemons'
 import { computed } from 'vue'
 
-const pokeImgBaseUrl = import.meta.env.VITE_POKEMON_IMG_API_URL
 const pokemonStore = usePokemonStore()
 const { pokemon } = defineProps<{
   pokemon: PokemonType
@@ -31,7 +30,7 @@ const activeClasses = computed(() => {
   >
     <img
       class="h-28 w-28 m-auto"
-      :src="`${pokeImgBaseUrl}${pokemon.id}.svg`"
+      :src="`${pokemon.img}`"
       height="112"
       width="112"
       :alt="`${pokemon.name}-pic`"

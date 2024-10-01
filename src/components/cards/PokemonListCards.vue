@@ -16,7 +16,7 @@ const limit = ref(20)
 const counter = ref(0)
 const disableMoreBtn = ref(false)
 const searchInput = ref('')
-const speciesFilter = ref([''])
+const speciesFilter = ref<string[]>([])
 
 const nextPage = computed(() => {
   const nextLimit = limit.value * (counter.value + 1)
@@ -90,9 +90,9 @@ const handleSearchPokemons = async (e: Event) => {
   if (nextPage.value !== 151) {
     await handleShowAll()
   }
-
+  const pokemonsStored = [pokemonStore.pokemons[2], pokemonStore.pokemons[3]]
+  console.log('pokemon: ', pokemonsStored, 'speciesFilter: ', speciesFilter)
   let finalResult = pokemonStore.pokemons.filter((pokemon) => {
-    console.log('pokemon: ', pokemon)
     return (
       pokemon.name.toLowerCase().includes(searchInput.value.toLowerCase()) ||
       pokemon.id.toString().toLowerCase().includes(searchInput.value.toLowerCase().trim())
