@@ -11,6 +11,7 @@ export type PokemonFilterType = {
 }
 
 export type PokemnonSpecieType = {
+  id: string | number
   name: string
   color: string
   icon?: string

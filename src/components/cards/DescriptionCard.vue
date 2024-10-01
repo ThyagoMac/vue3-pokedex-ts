@@ -13,10 +13,7 @@ const { currentPokemon } = defineProps<{
         <div class="bg-red-500 h-3 w-3 rounded-full border-2 border-black"></div>
         <div class="left-1/2 bg-red-500 h-3 w-3 rounded-full border-2 border-black"></div>
       </div>
-      <div
-        v-if="currentPokemon"
-        class="p-3 bg-blue-100 rounded-md bg-opacity-40 backdrop-blur-lg drop-shadow-lg m-auto w-full"
-      >
+      <div v-if="currentPokemon" class="p-3 bg-blue-100 rounded-md m-auto w-full">
         <img
           class="m-auto h-72 w-72"
           height="288"
@@ -25,7 +22,7 @@ const { currentPokemon } = defineProps<{
           alt="current-pokemon-picture"
         />
       </div>
-      <div v-else class="p-3 bg-blue-100 rounded-md">
+      <div v-else class="p-3 bg-blue-100 rounded-md m-auto w-full">
         <img
           class="m-auto h-72 w-72"
           height="288"

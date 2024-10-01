@@ -16,6 +16,7 @@ const limit = ref(20)
 const counter = ref(0)
 const disableMoreBtn = ref(false)
 const searchInput = ref('')
+const speciesFilter = ref([''])
 
 const nextPage = computed(() => {
   const nextLimit = limit.value * (counter.value + 1)
@@ -91,6 +92,7 @@ const handleSearchPokemons = async (e: Event) => {
   }
 
   let finalResult = pokemonStore.pokemons.filter((pokemon) => {
+    console.log('pokemon: ', pokemon)
     return (
       pokemon.name.toLowerCase().includes(searchInput.value.toLowerCase()) ||
       pokemon.id.toString().toLowerCase().includes(searchInput.value.toLowerCase().trim())
@@ -98,6 +100,25 @@ const handleSearchPokemons = async (e: Event) => {
   })
 
   pokemonList.value = [...finalResult]
+}
+
+const handleToggleSpecieFilter = (specieName: string) => {
+  const index = speciesFilter.value.indexOf(specieName)
+
+  if (index === -1) {
+    // add speciename
+    speciesFilter.value.push(specieName)
+    return
+  }
+  // remove speciename
+  speciesFilter.value.splice(index, 1)
+}
+
+const checkPokemonSpecieClass = (specieName: string) => {
+  if (speciesFilter.value.includes(specieName)) {
+    return 'border-zinc-900 border-solid opacity-100 '
+  }
+  return ''
 }
 </script>
 <template>
@@ -136,13 +157,19 @@ const handleSearchPokemons = async (e: Event) => {
       @handleShowMoreTwenty="handleShowMoreTwenty"
       @handleShowAll="handleShowAll"
     />
-    <section class="flex flex-wrap items-center justify-center max-w-80">
+    <section class="flex flex-wrap items-center justify-center max-w-80 bg-zinc-300 rounded-md p-2">
       <div
         v-for="pokemonSpecie in POKEMONSPECIES"
         :key="pokemonSpecie.name"
-        class="flex-1 border-4 cursor-pointer opacity-90 font-bold hover:opacity-100 hover:border-zinc-900 hover:border-solid transition-all"
+        :class="[
+          'flex-1 border-4 cursor-pointer opacity-80 font-bold hover:opacity-100 transition-all',
+          checkPokemonSpecieClass(pokemonSpecie.name)
+        ]"
       >
-        <p :class="`${pokemonSpecie.color} capitalize text-center p-2`">
+        <p
+          :class="`${pokemonSpecie.color} capitalize text-center p-2`"
+          @click="handleToggleSpecieFilter(pokemonSpecie.name)"
+        >
           {{ pokemonSpecie.name }}
         </p>
       </div>
