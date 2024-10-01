@@ -5,11 +5,7 @@ type Props = {
   flicker?: boolean
 }
 
-const { size, color, flicker } = withDefaults(defineProps<Props>(), {
-  color: 'cyan',
-  flicker: false,
-  size: 'md'
-})
+const { color = 'cyan', size = 'md', flicker = false } = defineProps<Props>()
 
 const classConfig = {
   //color

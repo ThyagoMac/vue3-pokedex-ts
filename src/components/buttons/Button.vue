@@ -4,10 +4,7 @@ type Props = {
   size?: 'md' | 'sm' | 'lg'
   disabled?: boolean
 }
-const { variant, size, disabled } = withDefaults(defineProps<Props>(), {
-  variant: 'primary',
-  size: 'md'
-})
+const { variant = 'primary', size = 'md', disabled = false } = defineProps<Props>()
 
 const classConfig = {
   //variant

@@ -138,6 +138,13 @@ const checkPokemonSpecieClass = (specieName: string) => {
     </div>
     <div v-show="isLoading">loading...</div>
 
+    <ListCardsPagination
+      :nextPage="nextPage"
+      :disableMoreBtn="disableMoreBtn"
+      @handleShowMoreTwenty="handleShowMoreTwenty"
+      @handleShowAll="handleShowAll"
+    />
+
     <form @submit="handleSearchPokemons">
       <div class="flex">
         <TextInput
@@ -151,12 +158,7 @@ const checkPokemonSpecieClass = (specieName: string) => {
         </Button>
       </div>
     </form>
-    <ListCardsPagination
-      :nextPage="nextPage"
-      :disableMoreBtn="disableMoreBtn"
-      @handleShowMoreTwenty="handleShowMoreTwenty"
-      @handleShowAll="handleShowAll"
-    />
+
     <section class="flex flex-wrap items-center justify-center max-w-80 bg-zinc-300 rounded-md p-2">
       <div
         v-for="pokemonSpecie in POKEMONSPECIES"
