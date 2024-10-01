@@ -1,10 +1,31 @@
 <script setup lang="ts">
-import type { CurrentPokemonType } from '@/types/PokemonType'
+import type { CurrentPokemonType, PokemonType } from '@/types/PokemonType'
+import PokemonCard from './PokemonCard.vue'
+import { usePokemonStore } from '@/stores/pokemons'
+import { computed } from 'vue'
 
 const pokeImgBaseUrl = import.meta.env.VITE_POKEMON_IMG_API_URL
+const pokemonStore = usePokemonStore()
 const { currentPokemon } = defineProps<{
   currentPokemon: CurrentPokemonType | null
 }>()
+
+const pokemonEvolutions = computed(() => {
+  const finalResult: PokemonType[] = []
+  currentPokemon?.evolutions.forEach((evolution) => {
+    pokemonStore.pokemons.find((pokemon) => {
+      if (pokemon.name === evolution) {
+        finalResult.push(pokemon)
+      }
+    })
+  })
+
+  return finalResult
+})
+
+const handlePokemonCardClick = (pokemon: PokemonType) => {
+  pokemonStore.dispatchSetCurrentPokemon(pokemon.id)
+}
 </script>
 <template>
   <div class="m-5 flex flex-col gap-3">
@@ -53,8 +74,20 @@ const { currentPokemon } = defineProps<{
           </div>
         </div>
       </div>
-      Statistics / type 💧 🪨 🌿 🔥
+      <!-- use icons? 💧 🪨 🌿 🔥 -->
     </div>
-    <div class="p-3 bg-green-200 rounded-md">Evolutions</div>
+    <div class="p-3 bg-green-200 rounded-md font-bold">
+      <div class="font-bold text-sm mb-2">Evolutions</div>
+
+      <div class="flex w-full">
+        <PokemonCard
+          v-for="(pkmEvolution, index) in pokemonEvolutions"
+          :key="index"
+          class="flex-1"
+          :pokemon="pkmEvolution"
+          @click="() => handlePokemonCardClick(pkmEvolution)"
+        />
+      </div>
+    </div>
   </div>
 </template>

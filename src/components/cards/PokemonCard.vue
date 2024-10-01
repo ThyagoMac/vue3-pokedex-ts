@@ -15,7 +15,7 @@ const addZeros = (num: number | string) => {
 const position = addZeros(pokemon.id)
 
 const activeClasses = computed(() => {
-  return pokemon.id === pokemonStore.currentPokemon?.id
+  return pokemon.id == pokemonStore.currentPokemon?.id
     ? 'opacity-100'
     : 'opacity-80 hover:opacity-100'
 })

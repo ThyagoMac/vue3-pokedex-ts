@@ -56,7 +56,7 @@ type TypeType = {
 
 export type CurrentPokemonType = {
   abilities: AbilityType[]
-  id: number
+  id: number | string
   name: string
   stats: StatType[]
   types: TypeType[]
