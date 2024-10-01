@@ -18,8 +18,8 @@ const { currentPokemon } = defineProps<{
           class="m-auto h-72 w-72"
           height="288"
           width="288"
-          :src="`${pokeImgBaseUrl}${currentPokemon?.id}.svg`"
-          alt="current-pokemon-picture"
+          :src="`${currentPokemon.img}`"
+          :alt="`${currentPokemon.name}-picture`"
         />
       </div>
       <div v-else class="p-3 bg-blue-100 rounded-md m-auto w-full">

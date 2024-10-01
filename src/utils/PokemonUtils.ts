@@ -22,13 +22,17 @@ export const extractEvolutions = (evolutionChain: any): string[] => {
 }
 
 export const extractInformations = (pokemon: any) => {
+  const pokeImgBaseUrl = import.meta.env.VITE_POKEMON_IMG_API_URL
+
   //get Colors and types
   const pokemonTypesWithColors = pokemon.types.map((pokemonType: any) => {
     const speciesType = POKEMONSPECIES.find((specie) => specie.name === pokemonType.type.name)
     return speciesType
   })
 
-  const finalResult = { ...pokemon, types: pokemonTypesWithColors }
+  const img = `${pokeImgBaseUrl}${pokemon.id}.svg`
+
+  const finalResult = { ...pokemon, img: img, types: pokemonTypesWithColors }
   const { abilities, id, name, stats, types } = finalResult
-  return { abilities, id, name, stats, types }
+  return { abilities, id, name, stats, types, img }
 }

@@ -61,4 +61,5 @@ export type CurrentPokemonType = {
   stats: StatType[]
   types: TypeType[]
   evolutions: string[]
+  img: string
 }
