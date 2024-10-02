@@ -1,0 +1,33 @@
+<script setup lang="ts">
+import { usePokemonStore } from '@/stores/pokemons'
+import type { PokemonType } from '@/types/PokemonType'
+import PokemonCard from './cards/PokemonCard.vue'
+import Screen from './layout/Screen.vue'
+
+type Props = {
+  pokemonEvolutions: PokemonType[] | null
+}
+
+const { pokemonEvolutions } = defineProps<Props>()
+const pokemonStore = usePokemonStore()
+
+const handlePokemonCardClick = async (pokemon: PokemonType) => {
+  await pokemonStore.dispatchSetCurrentPokemon(pokemon.id)
+}
+</script>
+
+<template>
+  <Screen variant="green" classes="py-3 px-4 min-h-56">
+    <div class="font-bold text-sm mb-2">Evolutions</div>
+
+    <div class="flex w-full">
+      <PokemonCard
+        v-for="(pkmEvolution, index) in pokemonEvolutions"
+        :key="index"
+        class="flex-1"
+        :pokemon="pkmEvolution"
+        @click="() => handlePokemonCardClick(pkmEvolution)"
+      />
+    </div>
+  </Screen>
+</template>

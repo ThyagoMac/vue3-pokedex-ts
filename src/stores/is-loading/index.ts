@@ -3,6 +3,8 @@ import { defineStore } from 'pinia'
 
 export const useLoadingStore = defineStore('loading', () => {
   const isLoading = ref(false)
+  const isScreenLoading = ref(false)
+
   function loading() {
     isLoading.value = true
   }
@@ -14,5 +16,25 @@ export const useLoadingStore = defineStore('loading', () => {
     isLoading.value = val
   }
 
-  return { isLoading, setIsloading, loading, loaded }
+  function screenLoading() {
+    isScreenLoading.value = true
+  }
+  function screenLoaded() {
+    isScreenLoading.value = false
+  }
+
+  function setScreenLoading(val: boolean) {
+    isScreenLoading.value = val
+  }
+
+  return {
+    isLoading,
+    isScreenLoading,
+    setIsloading,
+    loading,
+    loaded,
+    screenLoading,
+    screenLoaded,
+    setScreenLoading
+  }
 })

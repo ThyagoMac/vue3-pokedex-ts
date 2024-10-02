@@ -10,10 +10,11 @@ import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { POKEMONSPECIES } from '@/utils/constants'
 import { getPokemonsType } from '@/services/PokemonService'
 import { buildPokemonList } from '@/utils/PokemonUtils'
+import Screen from '../layout/Screen.vue'
+import { useLoadingStore } from '@/stores/is-loading'
 
 const pokemonStore = usePokemonStore()
 const pokemonList = ref<PokemonType[] | null>([])
-const isLoading = ref(true)
 const limit = ref(20)
 const counter = ref(0)
 const disableMoreBtn = ref(false)
@@ -28,12 +29,18 @@ const nextPage = computed(() => {
   return 151
 })
 
+const isLoadingStore = useLoadingStore()
+
 onMounted(async () => {
+  isLoadingStore.setScreenLoading(true)
   const { success, status } = await pokemonStore.dispatchGetPokemonsList()
 
   pokemonList.value = [...pokemonStore.pokemons]
 
-  isLoading.value = false
+  //Fake loading
+  setTimeout(() => {
+    isLoadingStore.setScreenLoading(false)
+  }, 200)
 
   if (!success) {
     alert('Something gone wrong!')
@@ -42,6 +49,7 @@ onMounted(async () => {
 })
 
 const handleShowMoreTwenty = async () => {
+  isLoadingStore.setScreenLoading(true)
   let finalLimit = nextPage
 
   if (finalLimit.value > 151) {
@@ -56,7 +64,7 @@ const handleShowMoreTwenty = async () => {
   pokemonList.value = [...pokemonStore.pokemons]
 
   counter.value++
-  isLoading.value = false
+  isLoadingStore.setScreenLoading(false)
 
   if (!success) {
     alert('Something gone wrong!')
@@ -65,12 +73,13 @@ const handleShowMoreTwenty = async () => {
 }
 
 const getAllPokemons = async () => {
+  isLoadingStore.setScreenLoading(true)
   const { success, status } = await pokemonStore.dispatchGetPokemonsList({
     limit: limit.value,
     offset: 0
   })
   pokemonList.value = [...pokemonStore.pokemons]
-  isLoading.value = false
+  isLoadingStore.setScreenLoading(false)
 
   if (!success) {
     alert('Something gone wrong!')
@@ -169,8 +178,8 @@ const checkPokemonSpecieClass = (specieName: string) => {
 }
 </script>
 <template>
-  <div class="bg-red-600 p-5 h-full flex flex-col gap-5">
-    <div v-show="!isLoading" class="bg-zinc-300 py-4 px-2 rounded-md">
+  <div class="bg-red-600 p-5 h-full flex flex-col gap-5 min-w-374">
+    <Screen variant="zinc" classes="py-4 px-2 min-h-586">
       <h2 class="font-bold text-xl mb-3">Pokemon List ({{ pokemonList?.length || 0 }})</h2>
       <div class="pokemon-list-screen">
         <div class="grid grid-cols-2 gap-0 bar">
@@ -182,8 +191,7 @@ const checkPokemonSpecieClass = (specieName: string) => {
           />
         </div>
       </div>
-    </div>
-    <div v-show="isLoading">loading...</div>
+    </Screen>
 
     <ListCardsPagination
       :nextPage="nextPage"
@@ -193,7 +201,7 @@ const checkPokemonSpecieClass = (specieName: string) => {
     />
 
     <form @submit="handleSearchPokemons">
-      <div class="bg-blue-200 rounded-md p-2 flex flex-col gap-3">
+      <Screen variant="blue" classes="p-2 flex flex-col gap-3 min-h-451">
         <div class="flex">
           <TextInput
             id="search-pokemon-input"
@@ -232,7 +240,7 @@ const checkPokemonSpecieClass = (specieName: string) => {
             Search <MagnifyingGlassIcon class="h-5 w-5" />
           </Button>
         </div>
-      </div>
+      </Screen>
     </form>
   </div>
 </template>
