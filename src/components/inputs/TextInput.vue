@@ -42,7 +42,7 @@ const sizeClass = loadSizeClass()
     <input
       :id="id"
       :type="type ? type : 'text'"
-      :class="['py-2 px-3 w-min outline-none', variantClass, sizeClass]"
+      :class="['py-2 px-3 outline-none', variantClass, sizeClass]"
       :placeholder="placeholder"
       v-model="model"
     />

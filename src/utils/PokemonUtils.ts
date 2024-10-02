@@ -1,16 +1,16 @@
 import type {
   CurrentPokemonType,
-  EvolutionChain,
+  EvolutionChainType,
   PokemnonSpecieType,
   PokemonType,
   TypeType
 } from '@/types/PokemonType'
 import { POKEMONSPECIES } from './constants'
 
-export const extractEvolutions = (evolutionChain: EvolutionChain): string[] => {
+export const extractEvolutions = (evolutionChain: EvolutionChainType): string[] => {
   const evolutionNames: string[] = []
 
-  function extractNames(chain: EvolutionChain['chain']) {
+  function extractNames(chain: EvolutionChainType['chain']) {
     evolutionNames.push(chain.species.name)
 
     if (chain.evolves_to && chain.evolves_to.length > 0) {

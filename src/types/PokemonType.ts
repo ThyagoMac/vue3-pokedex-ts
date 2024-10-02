@@ -66,7 +66,7 @@ export type CurrentPokemonType = {
   img: string
 }
 
-export type EvolutionChain = {
+export type EvolutionChainType = {
   chain: {
     species: {
       name: string
