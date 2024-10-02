@@ -281,7 +281,7 @@ export const evolutionChain = {
   id: 1
 }
 
-export const typeThree = {
+export const typeName = {
   damage_relations: {
     double_damage_from: [
       { name: 'rock', url: 'https://pokeapi.co/api/v2/type/6/' },

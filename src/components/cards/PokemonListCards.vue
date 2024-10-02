@@ -2,12 +2,14 @@
 import { usePokemonStore } from '@/stores/pokemons'
 import { computed, onMounted, ref } from 'vue'
 import PokemonCard from '@/components/cards/PokemonCard.vue'
-import type { PokemonType } from '@/types/PokemonType'
+import type { PokemonGetTypesType, PokemonType } from '@/types/PokemonType'
 import ListCardsPagination from '@/components/paginations/ListCardsPagination.vue'
 import TextInput from '@/components/inputs/TextInput.vue'
 import Button from '../buttons/Button.vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { POKEMONSPECIES } from '@/utils/constants'
+import { getPokemonsType } from '@/services/PokemonService'
+import { buildPokemonList } from '@/utils/PokemonUtils'
 
 const pokemonStore = usePokemonStore()
 const pokemonList = ref<PokemonType[] | null>([])
@@ -16,7 +18,7 @@ const limit = ref(20)
 const counter = ref(0)
 const disableMoreBtn = ref(false)
 const searchInput = ref('')
-const speciesFilter = ref<string[]>([])
+const typesFilter = ref<string[]>([])
 
 const nextPage = computed(() => {
   const nextLimit = limit.value * (counter.value + 1)
@@ -62,15 +64,11 @@ const handleShowMoreTwenty = async () => {
   }
 }
 
-const handleShowAll = async () => {
-  limit.value = 151
-  disableMoreBtn.value = true
-
+const getAllPokemons = async () => {
   const { success, status } = await pokemonStore.dispatchGetPokemonsList({
     limit: limit.value,
     offset: 0
   })
-
   pokemonList.value = [...pokemonStore.pokemons]
   isLoading.value = false
 
@@ -84,41 +82,90 @@ const handlePokemonCardClick = (pokemon: PokemonType) => {
   pokemonStore.dispatchSetCurrentPokemon(pokemon.id)
 }
 
-const handleSearchPokemons = async (e: Event) => {
-  e.preventDefault()
+const fetchAllTypePokemons = async () => {
+  const allTypePokemons = await Promise.all(typesFilter.value.map(getPokemonsType))
 
-  if (nextPage.value !== 151) {
-    await handleShowAll()
-  }
-  const pokemonsStored = [pokemonStore.pokemons[2], pokemonStore.pokemons[3]]
-  console.log('pokemon: ', pokemonsStored, 'speciesFilter: ', speciesFilter)
-  let finalResult = pokemonStore.pokemons.filter((pokemon) => {
+  // Combine all arrays
+  //const amountPokemons = allTypePokemons.flat()
+
+  // Filter by type
+  const amountPokemons = allTypePokemons.reduce((acc, curr) => {
+    if (acc.length === 0) return curr
+    return acc.filter((pokemon: PokemonGetTypesType) =>
+      curr.some((currPokemon: PokemonGetTypesType) => currPokemon.name === pokemon.name)
+    )
+  }, [])
+  //build pokemonlist
+  const buildedPokemonList = buildPokemonList(amountPokemons)
+
+  return buildedPokemonList
+}
+
+const filterByTypeFilter = async () => {
+  let allTypePokemons: PokemonType[] = await fetchAllTypePokemons()
+  return allTypePokemons
+}
+
+const filterBySearchInput = (pokemons: PokemonType[]) => {
+  const filteredPokemons = pokemons.filter((pokemon) => {
     return (
       pokemon.name.toLowerCase().includes(searchInput.value.toLowerCase()) ||
       pokemon.id.toString().toLowerCase().includes(searchInput.value.toLowerCase().trim())
     )
   })
 
+  return filteredPokemons
+}
+
+const handleShowAll = async (isFilter: boolean = false) => {
+  limit.value = 151
+  disableMoreBtn.value = true
+
+  if (!isFilter) {
+    await getAllPokemons()
+    return
+  } else {
+    let filteredPokemons = await filterByTypeFilter()
+    filteredPokemons = filterBySearchInput(filteredPokemons)
+
+    pokemonStore.initPokemons(filteredPokemons)
+    pokemonList.value = [...filteredPokemons]
+  }
+}
+
+const handleSearchPokemons = async (e: Event) => {
+  e.preventDefault()
+
+  //Avoit call API when have enough pokemons or without typeFilter selected.
+  if (typesFilter.value.length > 0) {
+    //handleShowAll(isFilter = true)
+    await handleShowAll(true)
+    return
+  }
+
+  await handleShowAll()
+
+  let finalResult = filterBySearchInput(pokemonStore.pokemons)
   pokemonList.value = [...finalResult]
 }
 
 const handleToggleSpecieFilter = (specieName: string) => {
-  const index = speciesFilter.value.indexOf(specieName)
+  const index = typesFilter.value.indexOf(specieName)
 
   if (index === -1) {
     // add speciename
-    speciesFilter.value.push(specieName)
+    typesFilter.value.push(specieName)
     return
   }
   // remove speciename
-  speciesFilter.value.splice(index, 1)
+  typesFilter.value.splice(index, 1)
 }
 
 const checkPokemonSpecieClass = (specieName: string) => {
-  if (speciesFilter.value.includes(specieName)) {
-    return 'border-zinc-900 border-solid opacity-100 '
+  if (typesFilter.value.includes(specieName)) {
+    return 'border-zinc-900 opacity-100'
   }
-  return ''
+  return 'border-blue-200'
 }
 </script>
 <template>
@@ -146,36 +193,47 @@ const checkPokemonSpecieClass = (specieName: string) => {
     />
 
     <form @submit="handleSearchPokemons">
-      <div class="flex">
-        <TextInput
-          id="search-pokemon-input"
-          class="flex-1"
-          placeholder="Search a pokemon"
-          v-model="searchInput"
-        />
-        <Button variant="dark" size="sm" type="submit">
-          <MagnifyingGlassIcon class="block h-5 w-5" />
-        </Button>
+      <div class="bg-blue-200 rounded-md p-2 flex flex-col gap-3">
+        <div class="flex">
+          <TextInput
+            id="search-pokemon-input"
+            class="flex-1"
+            placeholder="Search pokemons"
+            v-model="searchInput"
+          />
+          <Button variant="dark" size="sm" type="submit">
+            <MagnifyingGlassIcon class="block h-5 w-5" />
+          </Button>
+        </div>
+        <div
+          class="grid grid-cols-3 gap-1 items-center justify-center border-t border-zinc-200 pt-2"
+        >
+          <div
+            v-for="pokemonSpecie in POKEMONSPECIES"
+            :key="pokemonSpecie.name"
+            :class="[
+              'flex-1 border-4 cursor-pointer opacity-80 font-bold hover:border-zinc-500 hover:opacity-100 transition-all',
+              checkPokemonSpecieClass(pokemonSpecie.name)
+            ]"
+          >
+            <button
+              type="button"
+              :class="`${pokemonSpecie.color} capitalize text-center p-2 w-full`"
+              @click="handleToggleSpecieFilter(pokemonSpecie.name)"
+            >
+              {{ pokemonSpecie.name }}
+            </button>
+          </div>
+          <Button
+            class="flex flex-row gap-1 items-center justify-center"
+            variant="dark"
+            type="submit"
+          >
+            Search <MagnifyingGlassIcon class="h-5 w-5" />
+          </Button>
+        </div>
       </div>
     </form>
-
-    <section class="flex flex-wrap items-center justify-center max-w-80 bg-zinc-300 rounded-md p-2">
-      <div
-        v-for="pokemonSpecie in POKEMONSPECIES"
-        :key="pokemonSpecie.name"
-        :class="[
-          'flex-1 border-4 cursor-pointer opacity-80 font-bold hover:opacity-100 transition-all',
-          checkPokemonSpecieClass(pokemonSpecie.name)
-        ]"
-      >
-        <p
-          :class="`${pokemonSpecie.color} capitalize text-center p-2`"
-          @click="handleToggleSpecieFilter(pokemonSpecie.name)"
-        >
-          {{ pokemonSpecie.name }}
-        </p>
-      </div>
-    </section>
   </div>
 </template>
 

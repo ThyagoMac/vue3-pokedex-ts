@@ -14,10 +14,10 @@ const loadVariantClass = () => {
   if (variant && variant === 'secondary') {
     return 'rounded-md bg-green-200 hover:bg-green-400 disabled:hover:bg-green-200'
   }
-  if (variant && variant === 'dark-btn') {
+  if (variant && variant === 'dark') {
     return 'rounded-md bg-zinc-700 text-zinc-400 border-4 border-zinc-900 hover:bg-zinc-900 disabled:hover:bg-zinc-700 hover:text-zinc-100 disabled:hover:text-zinc-400'
   }
-  return 'bg-blue-100 hover:bg-blue-200'
+  return 'bg-blue-100 hover:bg-cyan-100'
 }
 
 const loadSizeClass = () => {

@@ -1,6 +1,11 @@
 import { pokeApi } from '@/services/api'
 import type { APIResponse } from '@/types/APIResponse'
-import type { PokemonSpeciesType, PokemonType } from '@/types/PokemonType'
+import type {
+  CurrentPokemonType,
+  PokemonGetTypesType,
+  PokemonSpeciesType,
+  PokemonType
+} from '@/types/PokemonType'
 
 export const getPokemons = async (filters = { limit: 151, offset: 0 }) => {
   return await pokeApi.get<APIResponse<PokemonType[]>>('pokemon', {
@@ -9,7 +14,7 @@ export const getPokemons = async (filters = { limit: 151, offset: 0 }) => {
 }
 
 export const getPokemonInformations = async (id: string | number) => {
-  return await pokeApi.get<APIResponse<PokemonType>>(`pokemon/${id}`)
+  return await pokeApi.get<CurrentPokemonType>(`pokemon/${id}`)
 }
 
 export const getPokemonEvolutions = async (pokemonId: string | number) => {
@@ -19,4 +24,11 @@ export const getPokemonEvolutions = async (pokemonId: string | number) => {
   const evolutionChain = await pokeApi.get(`evolution-chain/${evolutionId}`)
 
   return evolutionChain
+}
+
+export const getPokemonsType = async (typeName: string | number) => {
+  const res = await pokeApi.get(`type/${typeName}`)
+  const finalResult = res.data.pokemon.map((item: { pokemon: PokemonGetTypesType }) => item.pokemon)
+
+  return finalResult
 }

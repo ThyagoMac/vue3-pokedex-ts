@@ -1,9 +1,13 @@
 export type PokemonType = {
   id: string | number
   name: string
-  description: string
   url: string
   img: string
+}
+
+export type PokemonGetTypesType = {
+  name: string
+  url: string
 }
 
 export type PokemonFilterType = {
@@ -24,8 +28,6 @@ export type PokemonSpeciesType = {
   }
 }
 
-//current pokemon types
-
 type AbilityType = {
   ability: {
     name: string
@@ -44,7 +46,7 @@ type StatType = {
   }
 }
 
-type TypeType = {
+export type TypeType = {
   slot: number
   name?: string
   color?: string
@@ -59,7 +61,26 @@ export type CurrentPokemonType = {
   id: number | string
   name: string
   stats: StatType[]
-  types: TypeType[]
+  types?: TypeType[]
   evolutions: string[]
   img: string
+}
+
+export type EvolutionChain = {
+  chain: {
+    species: {
+      name: string
+    }
+    evolves_to: Array<{
+      species: {
+        name: string
+      }
+      evolves_to: Array<{
+        species: {
+          name: string
+        }
+        evolves_to: any[] //must be any?
+      }>
+    }>
+  }
 }

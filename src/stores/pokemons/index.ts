@@ -4,8 +4,14 @@ import {
   getPokemons
 } from '@/services/PokemonService'
 import type { APIResponse } from '@/types/APIResponse'
-import type { CurrentPokemonType, PokemonFilterType, PokemonType } from '@/types/PokemonType'
-import { extractEvolutions } from '@/utils/PokemonUtils'
+import type {
+  CurrentPokemonType,
+  PokemnonSpecieType,
+  PokemonFilterType,
+  PokemonType,
+  TypeType
+} from '@/types/PokemonType'
+import { buildPokemonList, extractEvolutions } from '@/utils/PokemonUtils'
 import { extractInformations } from '@/utils/PokemonUtils'
 import type { AxiosError } from 'axios'
 import { defineStore } from 'pinia'
@@ -48,23 +54,9 @@ export const usePokemonStore = defineStore('pokemonStore', () => {
       }
       const { status, data } = await getPokemons(currentFilters.value)
       if (status === 200) {
-        const pokeImgBaseUrl = import.meta.env.VITE_POKEMON_IMG_API_URL
-        const finalPokemons: PokemonType[] = data.results.map((pokemon, index) => {
-          //get id in "url": "https://pokeapi.co/api/v2/pokemon/1/"
-          //method one:
-          //const id = pokemon.url.split('/')[6] || index + 1
-          //method two:
-          //const pokeImgBaseUrl = import.meta.env.VITE_POKEMON_API_URL
-          //const id = pokemon.url.replace(`${pokeImgBaseUrl}pokemon/`, '').replace('/', '')
-          const id = pokemon.url.split('/')[6] || index + 1
+        const buildedPokemonList = buildPokemonList(data.results)
 
-          return {
-            ...pokemon,
-            id: id,
-            img: `${pokeImgBaseUrl}${id}.svg`
-          }
-        })
-        initPokemons(finalPokemons)
+        initPokemons(buildedPokemonList)
         return {
           success: true,
           results: null
@@ -85,33 +77,78 @@ export const usePokemonStore = defineStore('pokemonStore', () => {
     }
   }
 
+  function isTypeType(obj: any): obj is TypeType {
+    return (
+      obj &&
+      typeof obj === 'object' &&
+      'slot' in obj &&
+      'type' in obj &&
+      typeof obj.type === 'object' &&
+      'name' in obj.type &&
+      'url' in obj.type
+    )
+  }
+
+  // Conversion function from PokemnonSpecieType to TypeType
+  function convertToTypeType(obj: PokemnonSpecieType): TypeType {
+    return {
+      slot: 1, // Default value, adjust as needed
+      type: {
+        name: obj.name,
+        url: '' // You might need to provide a default URL or extract it from somewhere
+      },
+      name: obj.name,
+      color: obj.color
+    }
+  }
+
   async function dispatchSetCurrentPokemon(
     id: string | number
-  ): Promise<APIResponse<PokemonType | null>> {
+  ): Promise<APIResponse<CurrentPokemonType | null>> {
     try {
-      //get
-      const pokemonInformations = await getPokemonInformations(id)
+      // Get Pokémon data
       const pokemonEvolutions = await getPokemonEvolutions(id)
-      //extract
+      const pokemonInformations = await getPokemonInformations(id)
+
+      // Extract evolutions and information
       const extractedEvol = extractEvolutions(pokemonEvolutions.data)
       const extractedInfo = extractInformations(pokemonInformations.data)
-      //build
-      const finalResult = {
-        ...extractedInfo,
-        evolutions: extractedEvol
+
+      // Ensure that all required fields for CurrentPokemonType are not undefined
+      const finalResult: CurrentPokemonType = {
+        abilities: extractedInfo?.abilities ?? [],
+        id: extractedInfo?.id ?? id,
+        name: extractedInfo?.name ?? '',
+        stats: extractedInfo?.stats ?? [],
+        types:
+          extractedInfo?.types
+            ?.map((type) => {
+              if (isTypeType(type)) {
+                return type
+              } else if (type) {
+                return convertToTypeType(type)
+              }
+              return undefined
+            })
+            .filter((type): type is TypeType => type !== undefined) ?? undefined,
+        evolutions: extractedEvol ?? [],
+        img: extractedInfo?.img ?? ''
       }
+
+      // Update current Pokémon with the extracted information
       updateCurrentPokemon(finalResult)
 
+      // Return success response with the final result
       return {
-        success: false,
-        results: null,
-        status: 400
+        success: true,
+        results: finalResult,
+        status: 200
       }
     } catch (error) {
       const _error = error as AxiosError<string>
       return {
         success: false,
-        status: _error.response?.status,
+        status: _error.response?.status || 500,
         results: null
       }
     }

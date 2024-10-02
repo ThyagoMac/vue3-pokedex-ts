@@ -1,16 +1,20 @@
+import type {
+  CurrentPokemonType,
+  EvolutionChain,
+  PokemnonSpecieType,
+  PokemonType,
+  TypeType
+} from '@/types/PokemonType'
 import { POKEMONSPECIES } from './constants'
 
-export const extractEvolutions = (evolutionChain: any): string[] => {
+export const extractEvolutions = (evolutionChain: EvolutionChain): string[] => {
   const evolutionNames: string[] = []
 
-  // go through
-  function extractNames(chain: any) {
-    // Add first evolution
+  function extractNames(chain: EvolutionChain['chain']) {
     evolutionNames.push(chain.species.name)
 
-    // Check for more evolution
     if (chain.evolves_to && chain.evolves_to.length > 0) {
-      chain.evolves_to.forEach((evolution: any) => {
+      chain.evolves_to.forEach((evolution) => {
         extractNames(evolution)
       })
     }
@@ -21,18 +25,47 @@ export const extractEvolutions = (evolutionChain: any): string[] => {
   return evolutionNames
 }
 
-export const extractInformations = (pokemon: any) => {
+export const extractInformations = (pokemon: CurrentPokemonType | null) => {
+  if (!pokemon) {
+    return
+  }
   const pokeImgBaseUrl = import.meta.env.VITE_POKEMON_IMG_API_URL
 
-  //get Colors and types
-  const pokemonTypesWithColors = pokemon.types.map((pokemonType: any) => {
-    const speciesType = POKEMONSPECIES.find((specie) => specie.name === pokemonType.type.name)
+  // Get colors and types
+  const pokemonTypesWithColors = pokemon.types?.map((pokemonType: TypeType) => {
+    const speciesType = POKEMONSPECIES.find(
+      (specie: PokemnonSpecieType) => specie.name === pokemonType.type.name
+    )
     return speciesType
   })
 
   const img = `${pokeImgBaseUrl}${pokemon.id}.svg`
 
-  const finalResult = { ...pokemon, img: img, types: pokemonTypesWithColors }
+  const finalResult = { ...pokemon, img, types: pokemonTypesWithColors }
   const { abilities, id, name, stats, types } = finalResult
+
   return { abilities, id, name, stats, types, img }
+}
+
+export const buildPokemonList = (pokemonList: PokemonType[]) => {
+  const pokeImgBaseUrl = import.meta.env.VITE_POKEMON_IMG_API_URL
+  const finalPokemons: PokemonType[] = pokemonList
+    .map((pokemon, index) => {
+      //get id in "url": "https://pokeapi.co/api/v2/pokemon/1/"
+      //method one:
+      //const id = pokemon.url.split('/')[6] || index + 1
+      //method two:
+      //const pokeAPIBaseUrl = import.meta.env.VITE_POKEMON_API_URL
+      //const id = pokemon.url.replace(`${pokeAPIBaseUrl}pokemon/`, '').replace('/', '')
+      const id = pokemon.url.split('/')[6] || index + 1
+
+      return {
+        ...pokemon,
+        id: id,
+        img: `${pokeImgBaseUrl}${id}.svg`
+      }
+    })
+    .filter((pokemon) => +pokemon.id <= 151)
+
+  return finalPokemons
 }

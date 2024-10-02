@@ -64,8 +64,8 @@ const handlePokemonCardClick = (pokemon: PokemonType) => {
             : {{ stat.base_stat }}
           </div>
         </div>
-        <div>
-          <div class="font-bold text-sm mb-2">Types</div>
+        <div class="flex flex-col gap-1">
+          <div class="font-bold text-sm mb-1">Types</div>
           <div v-for="(pkmType, index) in currentPokemon?.types" :key="index">
             <span
               :class="`${pkmType.color} text-center py-1 px-2 uppercase text-xs font-bold rounded-md`"
