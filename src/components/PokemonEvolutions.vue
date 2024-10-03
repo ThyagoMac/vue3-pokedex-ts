@@ -17,7 +17,7 @@ const handlePokemonCardClick = async (pokemon: PokemonType) => {
 </script>
 
 <template>
-  <Screen variant="green" classes="py-3 px-4 min-h-56">
+  <Screen variant="green" classes="py-3 px-4 min-h-40">
     <div class="font-bold text-sm mb-2">Evolutions</div>
 
     <div class="flex w-full">

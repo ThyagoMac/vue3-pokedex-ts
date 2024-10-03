@@ -50,7 +50,7 @@ const navigations = routes.getRoutes().map(({ path, name }) => ({ path, name }))
             v-for="(navigation, index) in navigations"
             :key="index"
             :to="navigation.path"
-            class="py-2 px-3 rounded-md bg-red-200 block"
+            class="py-2 px-3 rounded-md bg-green-200 hover:bg-green-300 transition-all block"
             activeClass="bg-green-300"
             exactActiveClass="bg-green-200"
           >
