@@ -20,7 +20,7 @@ const handlePokemonCardClick = async (pokemon: PokemonType) => {
   <Screen variant="green" classes="py-3 px-4 min-h-40">
     <div class="font-bold text-sm mb-2">Evolutions</div>
 
-    <div class="flex w-full">
+    <div class="flex w-full overflow-auto">
       <PokemonCard
         v-for="(pkmEvolution, index) in pokemonEvolutions"
         :key="index"

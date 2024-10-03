@@ -15,22 +15,26 @@ const { currentPokemon } = defineProps<Props>()
 const isLoadingStore = useLoadingStore()
 </script>
 <template>
-  <Screen variant="zinc" classes="p-9 min-h-96 relative">
+  <Screen variant="zinc" classes="p-9 min-h-72 relative">
     <div class="absolute top-3 left-1/2 flex gap-3">
       <div class="bg-red-500 h-3 w-3 rounded-full border-2 border-black"></div>
       <div class="left-1/2 bg-red-500 h-3 w-3 rounded-full border-2 border-black"></div>
     </div>
-    <div v-if="currentPokemon" class="p-3 bg-blue-100 rounded-md m-auto w-full overflow-hidden">
+    <Screen
+      v-if="currentPokemon"
+      variant="blue"
+      classes="p-2 rounded-md m-auto w-full overflow-hidden"
+    >
       <img
-        :class="`m-auto h-72 w-72 animate__animated
+        :class="`m-auto h-52 w-52 animate__animated
           ${animateClass}
           `"
-        height="288"
-        width="288"
+        height="208"
+        width="208"
         :src="`${currentPokemon.img}`"
         :alt="`${currentPokemon.name}-picture`"
       />
-    </div>
+    </Screen>
     <div v-else class="p-3 bg-blue-100 rounded-md m-auto w-full">nenhum carregado</div>
   </Screen>
 </template>
