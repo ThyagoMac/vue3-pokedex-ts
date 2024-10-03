@@ -28,6 +28,9 @@ const nextPage = computed(() => {
   }
   return 151
 })
+const isAllTypeFilterSelected = computed(() => {
+  return POKEMONSPECIES.length === typesFilter.value.length ? true : false
+})
 
 const isLoadingStore = useLoadingStore()
 
@@ -40,7 +43,7 @@ onMounted(async () => {
   //Fake loading
   setTimeout(() => {
     isLoadingStore.setScreenLoading(false)
-  }, 200)
+  }, 500)
 
   if (!success) {
     alert('Something gone wrong!')
@@ -158,30 +161,42 @@ const handleSearchPokemons = async (e: Event) => {
   pokemonList.value = [...finalResult]
 }
 
-const handleToggleSpecieFilter = (specieName: string) => {
-  const index = typesFilter.value.indexOf(specieName)
+const handleToggleTypeFilter = (typeName: string) => {
+  const index = typesFilter.value.indexOf(typeName)
 
   if (index === -1) {
-    // add speciename
-    typesFilter.value.push(specieName)
+    // add typename
+    typesFilter.value.push(typeName)
     return
   }
-  // remove speciename
+  // remove typename
   typesFilter.value.splice(index, 1)
 }
 
-const checkPokemonSpecieClass = (specieName: string) => {
-  if (typesFilter.value.includes(specieName)) {
+const handleQuickSelectSpecieFilter = () => {
+  if (isAllTypeFilterSelected.value) {
+    typesFilter.value = []
+    return
+  }
+
+  typesFilter.value = POKEMONSPECIES.map((specie) => specie.name)
+}
+const handleUnselectAllSpecieFilter = () => {
+  typesFilter.value = []
+}
+
+const checkPokemonSpecieClass = (typeName: string) => {
+  if (typesFilter.value.includes(typeName)) {
     return 'border-zinc-900 opacity-100'
   }
   return 'border-blue-200'
 }
 </script>
 <template>
-  <div class="bg-red-600 p-5 h-full flex flex-col gap-5 min-w-374">
-    <Screen variant="zinc" classes="py-4 px-2 min-h-586">
-      <h2 class="font-bold text-xl mb-3">Pokemon List ({{ pokemonList?.length || 0 }})</h2>
-      <div class="pokemon-list-screen">
+  <div class="bg-red-600 p-5 h-full flex flex-col gap-3 right-side-pokedex">
+    <Screen variant="zinc" classes="p-2 pokemon-list-screen">
+      <h2 class="font-bold text-lg mb-3">Pokemon List ({{ pokemonList?.length || 0 }})</h2>
+      <div class="pokemon-list">
         <div class="grid grid-cols-2 gap-0 bar">
           <PokemonCard
             v-for="pokemon in pokemonList"
@@ -201,11 +216,11 @@ const checkPokemonSpecieClass = (specieName: string) => {
     />
 
     <form @submit="handleSearchPokemons">
-      <Screen variant="blue" classes="p-2 flex flex-col gap-3 min-h-451">
+      <Screen variant="blue" classes="p-2 flex flex-col gap-3 min-h-451 ">
         <div class="flex">
           <TextInput
             id="search-pokemon-input"
-            class="flex-1"
+            class="flex-1 w-6"
             placeholder="Search pokemons"
             v-model="searchInput"
           />
@@ -214,7 +229,7 @@ const checkPokemonSpecieClass = (specieName: string) => {
           </Button>
         </div>
         <div
-          class="grid grid-cols-3 gap-1 items-center justify-center border-t border-zinc-200 pt-2"
+          class="grid grid-cols-2 sm:grid-cols-3 items-center justify-center border-t border-zinc-200 pt-2"
         >
           <div
             v-for="pokemonSpecie in POKEMONSPECIES"
@@ -226,20 +241,48 @@ const checkPokemonSpecieClass = (specieName: string) => {
           >
             <button
               type="button"
-              :class="`${pokemonSpecie.color} capitalize text-center p-2 w-full`"
-              @click="handleToggleSpecieFilter(pokemonSpecie.name)"
+              :class="`${pokemonSpecie.color} capitalize text-center text-sm p-1  w-full`"
+              @click="handleToggleTypeFilter(pokemonSpecie.name)"
             >
               {{ pokemonSpecie.name }}
             </button>
           </div>
-          <Button
-            class="flex flex-row gap-1 items-center justify-center"
-            variant="dark"
-            type="submit"
-          >
-            Search <MagnifyingGlassIcon class="h-5 w-5" />
-          </Button>
         </div>
+        <div class="flex">
+          <div
+            :class="[
+              'flex-1 border-4 cursor-pointer opacity-80 font-bold hover:border-zinc-500 hover:opacity-100 transition-all'
+            ]"
+          >
+            <button
+              type="button"
+              :class="`capitalize text-center text-sm py-1 w-full`"
+              @click="handleUnselectAllSpecieFilter"
+            >
+              Unselect All
+            </button>
+          </div>
+          <div
+            :class="[
+              'flex-1 border-4 cursor-pointer opacity-80 font-bold hover:border-zinc-500 hover:opacity-100 transition-all'
+            ]"
+          >
+            <button
+              type="button"
+              :class="`capitalize text-center text-sm py-1 w-full`"
+              @click="handleQuickSelectSpecieFilter"
+            >
+              {{ isAllTypeFilterSelected ? 'Unselect All' : 'Select All' }}
+            </button>
+          </div>
+        </div>
+        <Button
+          class="flex flex-row gap-1 items-center justify-center"
+          variant="dark"
+          type="submit"
+        >
+          Search <MagnifyingGlassIcon class="h-5 w-5" />
+        </Button>
       </Screen>
     </form>
   </div>
@@ -247,7 +290,10 @@ const checkPokemonSpecieClass = (specieName: string) => {
 
 <style scoped>
 .pokemon-list-screen {
-  max-height: 34.5rem;
+  min-height: 25rem;
+}
+.pokemon-list {
+  max-height: 23.5rem;
   overflow: auto;
 }
 </style>

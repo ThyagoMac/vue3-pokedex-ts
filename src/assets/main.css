@@ -22,9 +22,9 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-
-.min-h-586 {
-  min-height: 586px;
+.pokemon-list-screen {
+  min-height: 25rem;
+  min-width: 17.3rem;
 }
 .min-h-451 {
   min-height: 451px;
@@ -32,6 +32,13 @@
 .max-w-566 {
   max-width: 566px;
 }
-.min-w-374 {
+
+.right-side-pokedexmin-w-374 {
   min-width: 374px;
+}
+
+@media only screen and (max-width: 600px) {
+  .pokemon-list-screen {
+    min-width: 10rem;
+  }
 }

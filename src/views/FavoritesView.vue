@@ -4,7 +4,7 @@ import BaseTemplate from '@/components/layout/BaseTemplate.vue'
 
 <template>
   <BaseTemplate>
-    <div>About Page</div>
+    <div>Fav Page</div>
   </BaseTemplate>
 </template>
 

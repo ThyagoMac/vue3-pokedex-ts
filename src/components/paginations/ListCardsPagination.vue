@@ -12,6 +12,7 @@ const { disableMoreBtn, nextPage } = defineProps<{
       :disabled="disableMoreBtn"
       class="flex-1"
       variant="dark"
+      size="sm"
       @click="$emit('handleShowMoreTwenty')"
     >
       Show {{ nextPage }}
@@ -20,6 +21,7 @@ const { disableMoreBtn, nextPage } = defineProps<{
       :disabled="disableMoreBtn"
       class="flex-1"
       variant="dark"
+      size="sm"
       @click="$emit('handleShowAll')"
     >
       Show All

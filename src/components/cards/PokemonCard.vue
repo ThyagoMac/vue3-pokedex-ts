@@ -29,10 +29,10 @@ const activeClasses = computed(() => {
     ]"
   >
     <img
-      class="h-28 w-28 m-auto"
+      class="h-14 w-14 m-auto"
       :src="`${pokemon.img}`"
-      height="112"
-      width="112"
+      height="56"
+      width="56"
       :alt="`${pokemon.name}-pic`"
     />
     <p class="text-xs mt-1">#{{ position }}</p>
