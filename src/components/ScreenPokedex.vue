@@ -35,6 +35,9 @@ const isLoadingStore = useLoadingStore()
         :alt="`${currentPokemon.name}-picture`"
       />
     </Screen>
-    <div v-else class="p-3 bg-blue-100 rounded-md m-auto w-full">nenhum carregado</div>
+    <div
+      v-else
+      class="p-3 bg-zinc-900 text-zinc-200 opacity-80 rounded-md m-auto w-full h-56"
+    ></div>
   </Screen>
 </template>
