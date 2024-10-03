@@ -32,3 +32,36 @@ export const getPokemonsType = async (typeName: string | number) => {
 
   return finalResult
 }
+
+// favorites
+const STORAGE_KEY = 'favoritePokemonNames'
+
+export const getFavoritePokemonsList = (): string[] => {
+  const favorites = localStorage.getItem(STORAGE_KEY)
+  return favorites ? JSON.parse(favorites) : []
+}
+
+export const getFavoritePokemon = (name: string): string | null => {
+  const favorites = getFavoritePokemonsList()
+  return favorites.includes(name) ? name : null
+}
+
+export const updateFavoritePokemon = (pokemonName: string): void => {
+  const updatedFavorites = getFavoritePokemonsList()
+
+  if (!updatedFavorites.includes(pokemonName)) {
+    updatedFavorites.push(pokemonName)
+  }
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedFavorites))
+}
+
+export const setFavoritePokemons = (favoriteNames: string[]): void => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(favoriteNames))
+}
+
+export const deleteFavoritePokemon = (pokemonName: string): void => {
+  const favorites = getFavoritePokemonsList()
+  const updatedFavorites = favorites.filter((favName) => favName !== pokemonName)
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedFavorites))
+}

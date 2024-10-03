@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import type { PokemonType } from '@/types/PokemonType'
 import { usePokemonStore } from '@/stores/pokemons'
-import { computed } from 'vue'
-import { StarIcon } from '@heroicons/vue/24/outline'
+import { computed, onMounted } from 'vue'
+import { StarIcon } from '@heroicons/vue/24/solid'
+import { getFavoritePokemonsList } from '@/services/PokemonService'
+import { useFavoriteStore } from '@/stores/favorite-pokemons'
 
 const emit = defineEmits(['cardClick', 'favoriteClick'])
 
+const favoritePokemonsStore = useFavoriteStore()
 const pokemonStore = usePokemonStore()
 const { pokemon } = defineProps<{
   pokemon: PokemonType
@@ -17,19 +20,34 @@ const addZeros = (num: number | string) => {
 }
 const position = addZeros(pokemon.id)
 
+onMounted(() => {
+  //avoid init two times
+  if (favoritePokemonsStore.favoriteNames.length < 1) {
+    favoritePokemonsStore.initFavorites(getFavoritePokemonsList())
+  }
+})
+
 const activeClasses = computed(() => {
   return pokemon.id == pokemonStore.currentPokemon?.id
     ? 'opacity-100'
     : 'opacity-80 hover:opacity-100'
 })
+const favoriteClasses = computed(() => {
+  if (!pokemon.name) {
+    return
+  }
+  const favNames = favoritePokemonsStore.favoriteNames
+  return favNames.includes(pokemon.name) ? 'text-yellow-400' : 'text-zinc-400'
+})
+
 const handleClick = () => {
-  console.log('cardclick: ')
   emit('cardClick')
 }
 const handleFavoriteClick = (event: Event) => {
-  console.log('favoriteClick: ')
   event.stopPropagation()
   emit('favoriteClick')
+
+  favoritePokemonsStore.dispatchUpdateFavorite(pokemon.name)
 }
 </script>
 
@@ -43,7 +61,7 @@ const handleFavoriteClick = (event: Event) => {
   >
     <StarIcon
       @click="handleFavoriteClick"
-      class="block h-5 w-5 text-zinc-400 absolute hover:text-yellow-300"
+      :class="['block h-5 w-5 right-0 hover:text-yellow-200 absolute', favoriteClasses]"
     />
     <img
       class="h-14 w-14 m-auto"

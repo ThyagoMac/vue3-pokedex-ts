@@ -91,12 +91,7 @@ const getAllPokemons = async () => {
 }
 
 const handlePokemonCardClick = (pokemon: PokemonType) => {
-  console.log('pokemon click')
   pokemonStore.dispatchSetCurrentPokemon(pokemon.id)
-}
-const handleFavoritePokemonClick = (pokemon: PokemonType) => {
-  if (pokemon) return
-  console.log('FAV click', pokemon)
 }
 
 const fetchAllTypePokemons = async () => {
@@ -207,7 +202,6 @@ const checkPokemonSpecieClass = (typeName: string) => {
             v-for="pokemon in pokemonList"
             :key="pokemon.name"
             :pokemon="pokemon"
-            @favoriteClick="handleFavoritePokemonClick(pokemon)"
             @cardClick="handlePokemonCardClick(pokemon)"
           />
         </div>
