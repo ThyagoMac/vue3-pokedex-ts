@@ -16,6 +16,9 @@ import { extractInformations } from '@/utils/PokemonUtils'
 import type { AxiosError } from 'axios'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useLoadingStore } from '../is-loading'
+
+const isLoadingStore = useLoadingStore()
 
 export const usePokemonStore = defineStore('pokemonStore', () => {
   const pokemons = ref<PokemonType[]>([])
@@ -39,7 +42,11 @@ export const usePokemonStore = defineStore('pokemonStore', () => {
 
   function updateCurrentPokemon(pokemon: CurrentPokemonType) {
     if (pokemon.id !== currentPokemon?.value?.id) {
-      currentPokemon.value = pokemon
+      isLoadingStore.setCurrentPkmLoading(true)
+      setTimeout(() => {
+        currentPokemon.value = pokemon
+        isLoadingStore.setCurrentPkmLoading(false)
+      }, 100)
     }
   }
 
@@ -137,7 +144,6 @@ export const usePokemonStore = defineStore('pokemonStore', () => {
 
       // Update current Pokémon with the extracted information
       updateCurrentPokemon(finalResult)
-
       // Return success response with the final result
       return {
         success: true,
