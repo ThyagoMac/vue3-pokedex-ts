@@ -21,7 +21,7 @@ const isLoadingStore = useLoadingStore()
       <div class="left-1/2 bg-red-500 h-3 w-3 rounded-full border-2 border-black"></div>
     </div>
     <div v-if="currentPokemon" class="p-3 bg-blue-100 rounded-md m-auto w-full overflow-hidden">
-      <imgs
+      <img
         :class="`m-auto h-72 w-72 animate__animated
           ${animateClass}
           `"
